@@ -13,7 +13,7 @@
  * - Implement rejectLoan()
  */
 
-import { apolloClient } from '@/lib/apollo';
+import { apolloClient } from '@/lib/core/apollo';
 
 interface GetLoansParams {
   page?: number;

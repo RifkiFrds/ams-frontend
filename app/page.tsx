@@ -1,5 +1,7 @@
 import React from 'react';
-
+import { AppButton } from '@/components/primitives';
+import { Box } from 'lucide-react';
+import App from 'next/app';
 /**
  * Home Page - Foundation Status
  *
@@ -15,14 +17,23 @@ export default function Home() {
     <main className="min-h-screen bg-white dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             AMS Frontend Foundation
           </h1>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+          <p className="mt-4 text-xl text-green-600 dark:text-gray-400">
             Asset Management System - Foundation Setup Complete
           </p>
-        </div>
 
+         
+        </div>
+  <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <AppButton>Primary (Navy)</AppButton>
+            <AppButton variant="secondary">Secondary (Blue)</AppButton>
+            <AppButton className="bg-success text-white">Success (Green)</AppButton>
+            <AppButton className="bg-warning text-white">Warning (Yellow)</AppButton>
+            <AppButton variant="danger">Destructive (Red)</AppButton>
+          </div>
+          
         {/* Foundation Status */}
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {[

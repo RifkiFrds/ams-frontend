@@ -18,11 +18,11 @@ export {
   GET_ASSETS, 
   GET_ASSET_BY_ID, 
   GET_ASSET_CATEGORIES 
-} from '@/graphql/queries/asset.query';
+} from './asset.query';
 
 export { 
   CREATE_ASSET, 
   UPDATE_ASSET, 
   DELETE_ASSET 
-} from '@/graphql/mutations/asset.mutation';
+} from './asset.mutation';
 
