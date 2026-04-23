@@ -66,7 +66,7 @@ interface FormFieldProps<
 
 const FormField = React.forwardRef<
   HTMLDivElement,
-  FormFieldProps
+  FormFieldProps<any, any>
 >(
   (
     {
@@ -99,7 +99,7 @@ const FormField = React.forwardRef<
                   >
                     {label}
                     {required && (
-                      <span className="ml-1 text-red-500" aria-label="required">
+                      <span className="ml-1 text-destructive" aria-label="required">
                         *
                       </span>
                     )}
@@ -116,14 +116,14 @@ const FormField = React.forwardRef<
                   render({ field, fieldState, formState })
                 ) : null}
                 {fieldState.error && (
-                  <p className="text-xs font-medium text-red-600 dark:text-red-400">
+                  <p className="text-xs font-medium text-destructive">
                     {fieldState.error.message}
                   </p>
                 )}
                 {description && !fieldState.error && (
                   <p
                     id={`${id}-description`}
-                    className="text-xs text-slate-500 dark:text-slate-400"
+                    className="text-xs text-muted-foreground"
                   >
                     {description}
                   </p>
@@ -135,7 +135,13 @@ const FormField = React.forwardRef<
       </FormFieldContext.Provider>
     )
   }
-)
+) as (<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>(
+  props: FormFieldProps<TFieldValues, TName> & { ref?: React.ForwardedRef<HTMLDivElement> }
+) => React.ReactElement) & { displayName?: string }
+
 
 FormField.displayName = 'FormField'
 

@@ -85,15 +85,15 @@ function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div className="rounded-xl border border-border overflow-hidden bg-card">
         <table className="w-full">
-          <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+          <thead className="bg-muted/50 border-b border-border">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="h-10 px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-300"
+                    className="h-12 px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground"
                   >
                     {header.isPlaceholder
                       ? null
@@ -103,26 +103,29 @@ function DataTable<TData, TValue>({
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+          <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="h-24 text-center text-sm text-slate-500 dark:text-slate-400"
+                  className="h-32 text-center text-sm text-muted-foreground"
                 >
-                  Loading...
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <span>Loading data...</span>
+                  </div>
                 </td>
               </tr>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors"
+                  className="hover:bg-muted/30 transition-colors group"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-4 py-3 text-sm text-slate-900 dark:text-slate-100"
+                      className="px-4 py-4 text-sm text-foreground"
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
@@ -133,9 +136,9 @@ function DataTable<TData, TValue>({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="h-24 text-center text-sm text-slate-500 dark:text-slate-400"
+                  className="h-32 text-center text-sm text-muted-foreground"
                 >
-                  No data
+                  No results found.
                 </td>
               </tr>
             )}
@@ -145,8 +148,9 @@ function DataTable<TData, TValue>({
 
       {table.getPageCount() > 1 && (
         <div className="flex items-center justify-between px-2">
-          <div className="text-xs text-slate-600 dark:text-slate-400">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          <div className="text-xs text-muted-foreground">
+            Page <span className="text-foreground font-medium">{table.getState().pagination.pageIndex + 1}</span> of{' '}
+            <span className="text-foreground font-medium">{table.getPageCount()}</span>
           </div>
           <div className="flex gap-2">
             <AppButton

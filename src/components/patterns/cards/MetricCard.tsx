@@ -26,27 +26,27 @@ const MetricCard = React.forwardRef<HTMLDivElement, MetricCardProps>(
       trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : null
     const trendColor =
       trend === 'up'
-        ? 'text-emerald-600 dark:text-emerald-400'
+        ? 'text-success'
         : trend === 'down'
-          ? 'text-red-600 dark:text-red-400'
-          : 'text-slate-600 dark:text-slate-400'
+          ? 'text-destructive'
+          : 'text-muted-foreground'
 
     return (
       <AppCard ref={ref} variant="default" className={className}>
         <div className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="text-sm text-slate-600 dark:text-slate-400">{title}</p>
+              <p className="text-sm text-muted-foreground">{title}</p>
             </div>
-            {Icon && <Icon className="h-5 w-5 text-slate-400 dark:text-slate-600" />}
+            {Icon && <Icon className="h-5 w-5 text-muted-foreground" />}
           </div>
 
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            <span className="text-2xl font-bold text-foreground">
               {value}
             </span>
             {unit && (
-              <span className="text-sm text-slate-600 dark:text-slate-400">
+              <span className="text-sm text-muted-foreground">
                 {unit}
               </span>
             )}
