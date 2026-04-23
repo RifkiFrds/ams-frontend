@@ -9,30 +9,47 @@ import { ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/clien
  * 3. Setup error handling policies
  */
 
+import { setContext } from '@apollo/client/link/context';
+import { getToken } from '@/modules/auth/utils/auth-token';
+
+import { onError } from '@apollo/client/link/error';
+import { useAuthStore } from '@/modules/auth/store/auth.store';
+
 const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'http://localhost:4000/graphql';
 
-// Authentication link (example - add your auth token logic)
-const authLink = new ApolloLink((operation, forward) => {
-  // Get auth token from storage or Zustand store
-  // Example: const token = localStorage.getItem('authToken');
-  
-  // operation.setContext({
-  //   headers: {
-  //     authorization: `Bearer ${token}`,
-  //   },
-  // });
+// Error handling link
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors) {
+    for (const err of graphQLErrors) {
+      if (err.extensions?.code === 'UNAUTHENTICATED') {
+        // Task 13.4: if token invalid → logout
+        useAuthStore.getState().logout();
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+      }
+    }
+  }
+});
 
-  return forward(operation);
+// Authentication link
+const authLink = setContext((_, { headers }) => {
+  const token = getToken();
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
 });
 
 // HTTP link
 const httpLink = new HttpLink({
   uri: GRAPHQL_ENDPOINT,
-  credentials: 'include', // Send cookies with requests
 });
 
 // Combine links
-const link = authLink.concat(httpLink);
+const link = ApolloLink.from([errorLink, authLink, httpLink]);
 
 // Initialize Apollo Client
 export const apolloClient = new ApolloClient({

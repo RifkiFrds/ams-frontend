@@ -65,7 +65,7 @@ const ApprovalAction = React.forwardRef<
       <div ref={ref} className="space-y-4">
         {showComment && (
           <div>
-            <label htmlFor="approval-comment" className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
+            <label htmlFor="approval-comment" className="block text-sm font-medium text-foreground mb-2">
               Comment (optional)
             </label>
             <AppTextarea

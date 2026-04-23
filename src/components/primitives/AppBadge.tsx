@@ -5,74 +5,37 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
 
-/**
- * AppBadge
- * Design system controlled badge primitive
- * 
- * ENTRY POINT for all badge/tag usage
- * Design system status indicators
- * 
- * @example
- * import { AppBadge } from '@/components/primitives'
- * 
- * <AppBadge variant="success">Active</AppBadge>
- */
-
 const appBadgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all',
+  'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold transition-all',
   {
     variants: {
       variant: {
-        // Status colors per design system
-        success: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
-        warning: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
-        danger: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300',
-        info: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
-        neutral: 'bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300',
+        success: 'text-success',
+        warning: 'text-warning',
+        danger: 'text-destructive',
+        info: 'text-secondary',
+        neutral: 'text-muted-foreground',
       },
-      style: {
-        solid: '',
-        outline: 'border-2',
-        dot: '',
+      badgeStyle: {
+        // Dot style (seperti di gambar "Baik", "Rusak")
+        dot: 'bg-card border border-border shadow-sm', 
+        // Solid style (seperti di gambar "Intrakomptabel")
+        solid: 'bg-muted text-foreground border border-transparent',
+        // Outline style
+        outline: 'border border-current bg-transparent',
       },
     },
-    compoundVariants: [
-      {
-        variant: 'success',
-        style: 'outline',
-        className: 'border-emerald-300 bg-transparent dark:border-emerald-700',
-      },
-      {
-        variant: 'warning',
-        style: 'outline',
-        className: 'border-amber-300 bg-transparent dark:border-amber-700',
-      },
-      {
-        variant: 'danger',
-        style: 'outline',
-        className: 'border-red-300 bg-transparent dark:border-red-700',
-      },
-      {
-        variant: 'info',
-        style: 'outline',
-        className: 'border-blue-300 bg-transparent dark:border-blue-700',
-      },
-      {
-        variant: 'neutral',
-        style: 'outline',
-        className: 'border-slate-300 bg-transparent dark:border-slate-700',
-      },
-    ],
     defaultVariants: {
       variant: 'neutral',
-      style: 'solid',
+      badgeStyle: 'solid',
     },
   }
 )
 
-interface AppBadgeProps
-  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "style">,
+export interface AppBadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof appBadgeVariants> {
+  dot?: boolean
   removable?: boolean
   onRemove?: () => void
   icon?: React.ComponentType<{ className?: string }>
@@ -80,16 +43,44 @@ interface AppBadgeProps
 
 const AppBadge = React.forwardRef<HTMLSpanElement, AppBadgeProps>(
   (
-    { className, variant, style, removable, onRemove, icon: Icon, children, ...props },
+    { 
+      className, 
+      variant, 
+      badgeStyle, 
+      dot,
+      removable, 
+      onRemove, 
+      icon: Icon, 
+      children, 
+      ...props 
+    },
     ref
-  ) => (
-    <span
-      ref={ref}
-      className={cn(appBadgeVariants({ variant, style }), className)}
-      {...props}
-    >
+  ) => {
+    // Jika prop dot={true} dikirim, paksa style menjadi 'dot'
+    const activeStyle = dot ? 'dot' : badgeStyle
+
+    return (
+      <span
+        ref={ref}
+        className={cn(appBadgeVariants({ variant, badgeStyle: activeStyle }), className)}
+        {...props}
+      >
+        {/* Jika style dot, tampilkan titik bulat kecil */}
+        {activeStyle === 'dot' && (
+        <span 
+          className={cn('h-1.5 w-1.5 rounded-full', {
+            'bg-success': variant === 'success',
+            'bg-warning': variant === 'warning',
+            'bg-destructive': variant === 'danger',
+            'bg-secondary': variant === 'info',
+            'bg-muted-foreground': variant === 'neutral',
+          })} 
+        />
+      )}
+      
       {Icon && <Icon className="h-3 w-3" />}
       {children}
+      
       {removable && (
         <button
           onClick={onRemove}
@@ -101,9 +92,8 @@ const AppBadge = React.forwardRef<HTMLSpanElement, AppBadgeProps>(
       )}
     </span>
   )
-)
+})
 
 AppBadge.displayName = 'AppBadge'
 
 export { AppBadge, appBadgeVariants }
-export type { AppBadgeProps }

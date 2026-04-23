@@ -31,27 +31,27 @@ interface ApprovalTimelineProps {
 const statusConfig = {
   pending: {
     icon: Clock,
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-500/10',
-    borderColor: 'border-amber-500/30',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
+    borderColor: 'border-warning/30',
   },
   approved: {
     icon: CheckCircle2,
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-emerald-500/30',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
+    borderColor: 'border-success/30',
   },
   rejected: {
     icon: XCircle,
-    color: 'text-red-500',
-    bgColor: 'bg-red-500/10',
-    borderColor: 'border-red-500/30',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
+    borderColor: 'border-destructive/30',
   },
   'in-progress': {
     icon: Clock,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
+    color: 'text-secondary',
+    bgColor: 'bg-secondary/10',
+    borderColor: 'border-secondary/30',
   },
 }
 
@@ -64,7 +64,7 @@ const ApprovalTimeline = React.forwardRef<
       ref={ref}
       className={cn(
         'space-y-4',
-        vertical ? 'divide-y divide-slate-200 dark:divide-slate-800' : 'flex gap-4'
+        vertical ? 'divide-y divide-border' : 'flex gap-4'
       )}
     >
       {steps.map((step, index) => {
@@ -81,7 +81,7 @@ const ApprovalTimeline = React.forwardRef<
             )}
           >
             {vertical && !isLastStep && (
-              <div className="absolute left-5 top-12 w-0.5 h-8 bg-slate-200 dark:bg-slate-800" />
+              <div className="absolute left-5 top-12 w-0.5 h-8 bg-border" />
             )}
 
             <div className={cn('flex gap-4', compact && 'gap-3')}>
@@ -89,7 +89,7 @@ const ApprovalTimeline = React.forwardRef<
                 className={cn(
                   'relative flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center',
                   config.bgColor,
-                  'border border-slate-200 dark:border-slate-800'
+                  'border border-border'
                 )}
               >
                 <Icon className={cn('h-5 w-5', config.color)} />
@@ -98,11 +98,11 @@ const ApprovalTimeline = React.forwardRef<
               <div className={cn('flex-1 pb-2', compact && 'pb-0')}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-medium text-sm text-slate-900 dark:text-slate-100">
+                    <p className="font-medium text-sm text-foreground">
                       {step.title}
                     </p>
                     {step.description && !compact && (
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         {step.description}
                       </p>
                     )}
@@ -124,7 +124,7 @@ const ApprovalTimeline = React.forwardRef<
                 </div>
 
                 {!compact && (
-                  <div className="flex gap-4 mt-2 text-xs text-slate-600 dark:text-slate-400 flex-wrap">
+                  <div className="flex gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
                     {step.timestamp && (
                       <div>
                         {step.timestamp.toLocaleDateString()} at{' '}
@@ -139,8 +139,8 @@ const ApprovalTimeline = React.forwardRef<
                 )}
 
                 {step.comment && !compact && (
-                  <div className="mt-2 p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                    <p className="text-xs text-slate-600 dark:text-slate-400 italic">
+                  <div className="mt-2 p-2 rounded bg-muted border border-border">
+                    <p className="text-xs text-muted-foreground italic">
                       {step.comment}
                     </p>
                   </div>

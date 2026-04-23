@@ -3,13 +3,13 @@
  * 
  * Design system controlled UI primitives
  * 
- * ⚠️ CRITICAL RULE:
+ *  CRITICAL RULE:
  * App code MUST import from this layer, NOT from ui/
  * 
- * ✅ CORRECT:
+ *  CORRECT:
  * import { AppButton } from '@/components/primitives'
  * 
- * ❌ WRONG:
+ * WRONG:
  * import { Button } from '@/components/ui/button'
  * 
  * This layer enforces design system compliance across the entire app.
@@ -42,3 +42,7 @@ export type { AppCardProps } from './AppCard'
 // Status Primitives
 export { AppBadge } from './AppBadge'
 export type { AppBadgeProps } from './AppBadge'
+
+// Overlay Primitives
+export { AppModal } from './AppModal'
+

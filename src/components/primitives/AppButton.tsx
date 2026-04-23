@@ -8,50 +8,45 @@ import { Loader2 } from 'lucide-react'
 /**
  * AppButton
  * Design system controlled button primitive
- * 
- * ENTRY POINT for all button usage in the app
+ * * ENTRY POINT for all button usage in the app
  * Wraps ui/button with design system styling and behavior
- * 
- * @example
- * import { AppButton } from '@/components/primitives'
- * 
- * <AppButton variant="primary" loading>Submit</AppButton>
  */
 
 const appButtonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg font-medium transition-all focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+  // UPDATE: Mengubah rounded-lg menjadi rounded-full untuk bentuk pill sesuai desain
+  'inline-flex items-center justify-center rounded-full font-medium transition-all focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
-        // Primary - brand blue theme per design system
+        // Primary - Menggunakan warna Oranye (Primary variable)
         primary:
-          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 focus-visible:ring-primary',
 
-        // Secondary - neutral gray
+        // Secondary - Menggunakan warna Muted sesuai desain visual (Navy/Grey)
         secondary:
-          'bg-slate-200 text-slate-900 hover:bg-slate-300 active:bg-slate-400 focus-visible:ring-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:active:bg-slate-500',
+          'bg-muted text-foreground hover:bg-muted/80 active:bg-muted/90 focus-visible:ring-muted',
 
-        // Outline - bordered
+        // Outline - Menggunakan border dan teks Primary
         outline:
-          'border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 focus-visible:ring-blue-500 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-950 dark:active:bg-blue-900',
+          'border border-primary text-primary hover:bg-primary/10 active:bg-primary/20 focus-visible:ring-primary',
 
-        // Danger - red theme for destructive actions
+        // Danger - Menggunakan semantic destructive
         danger:
-          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600 dark:active:bg-red-700',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80 focus-visible:ring-destructive',
 
-        // Ghost - transparent background
+        // Ghost - Transparent background
         ghost:
-          'text-slate-700 hover:bg-slate-100 active:bg-slate-200 focus-visible:ring-slate-400 dark:text-slate-300 dark:hover:bg-slate-800 dark:active:bg-slate-700',
+          'text-foreground hover:bg-muted active:bg-muted/80 focus-visible:ring-muted',
       },
       size: {
         // Compact - 36px height (touch minimum 44px with padding)
-        sm: 'h-8 px-3 gap-2 text-xs',
-        md: 'h-9 px-4 gap-2 text-sm',
-        lg: 'h-10 px-5 gap-2 text-base',
+        sm: 'h-8 px-4 gap-2 text-xs',
+        md: 'h-10 px-6 gap-2 text-sm', // Disesuaikan agar sedikit lebih lebar dan nyaman untuk pill shape
+        lg: 'h-12 px-8 gap-2 text-base',
         // Icon only
-        icon: 'h-9 w-9 p-0',
+        icon: 'h-10 w-10 p-0',
         icon_sm: 'h-8 w-8 p-0',
-        icon_lg: 'h-10 w-10 p-0',
+        icon_lg: 'h-12 w-12 p-0',
       },
       fullWidth: {
         true: 'w-full',
@@ -105,17 +100,19 @@ const AppButton = React.forwardRef<HTMLButtonElement, AppButtonProps>(
       >
         {/* Loading spinner overlay */}
         {loading && (
-          <Loader2 className="absolute h-full w-full animate-spin" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="h-5 w-5 animate-spin" />
+          </div>
         )}
 
         {/* Content - fade when loading */}
         <span className={cn('flex items-center gap-2', loading && 'invisible')}>
           {Icon && iconPosition === 'left' && (
-            <Icon className={size?.startsWith('icon') ? 'h-4 w-4' : 'h-4 w-4'} />
+            <Icon className={size?.startsWith('icon') ? 'h-5 w-5' : 'h-4 w-4'} />
           )}
           {children}
           {Icon && iconPosition === 'right' && (
-            <Icon className={size?.startsWith('icon') ? 'h-4 w-4' : 'h-4 w-4'} />
+            <Icon className={size?.startsWith('icon') ? 'h-5 w-5' : 'h-4 w-4'} />
           )}
         </span>
       </button>

@@ -102,9 +102,9 @@ const FormFileUpload = React.forwardRef<
           className={cn(
             'relative border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer',
             isDragActive
-              ? 'border-blue-500 bg-blue-500/5'
-              : 'border-slate-300 hover:border-slate-400 dark:border-slate-700 dark:hover:border-slate-600',
-            error && 'border-red-500 bg-red-500/5',
+              ? 'border-primary bg-primary/5'
+              : 'border-border hover:border-primary/50',
+            error && 'border-destructive bg-destructive/5',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
           onDragEnter={handleDrag}
@@ -124,45 +124,45 @@ const FormFileUpload = React.forwardRef<
             aria-label="Upload files"
           />
 
-          <Upload className="mx-auto h-8 w-8 mb-2 text-slate-400 dark:text-slate-500" />
-          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+          <Upload className="mx-auto h-8 w-8 mb-2 text-muted-foreground" />
+          <p className="text-sm font-medium text-foreground">
             Click or drag files here
           </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Supported formats: {acceptList.join(', ')}
             {maxSize && ` (max ${maxSize / 1024 / 1024}MB per file)`}
           </p>
         </div>
 
         {error && (
-          <p className="text-xs text-red-600 dark:text-red-400 font-medium">{error}</p>
+          <p className="text-xs text-destructive font-medium">{error}</p>
         )}
 
         {files.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
+            <p className="text-xs font-medium text-muted-foreground">
               {files.length} file{files.length !== 1 ? 's' : ''} selected
             </p>
             <div className="space-y-2">
               {files.map((file, idx) => (
                 <div
                   key={`${file.name}-${idx}`}
-                  className="flex items-center justify-between p-2 rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+                  className="flex items-center justify-between p-2 rounded border border-border bg-muted hover:bg-muted/80"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate text-slate-900 dark:text-slate-100">
+                    <p className="text-sm font-medium truncate text-foreground">
                       {file.name}
                     </p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                    <p className="text-xs text-muted-foreground">
                       {(file.size / 1024 / 1024).toFixed(2)}MB
                     </p>
                   </div>
                   <button
                     onClick={() => removeFile(idx)}
-                    className="ml-2 p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
+                    className="ml-2 p-1 hover:bg-muted/50 rounded transition-colors"
                     aria-label={`Remove ${file.name}`}
                   >
-                    <X className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                    <X className="h-4 w-4 text-muted-foreground" />
                   </button>
                 </div>
               ))}

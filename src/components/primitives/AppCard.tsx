@@ -1,55 +1,20 @@
 'use client'
 
 import * as React from 'react'
-import { Card as UICard } from '@/components/ui/card'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-/**
- * AppCard
- * Design system controlled card primitive
- * 
- * ENTRY POINT for all card usage
- * Wraps ui/card with design system styling
- * 
- * @example
- * import { AppCard } from '@/components/primitives'
- * 
- * <AppCard>
- *   <AppCard.Header>
- *     <AppCard.Title>Title</AppCard.Title>
- *   </AppCard.Header>
- *   <AppCard.Content>Content</AppCard.Content>
- * </AppCard>
- */
-
 const appCardVariants = cva(
-  'rounded-lg border transition-all',
+  'rounded-xl border transition-all overflow-hidden',
   {
     variants: {
       variant: {
-        // Default - neutral card
-        default:
-          'bg-white border-slate-200 shadow-sm hover:shadow-md dark:bg-slate-950 dark:border-slate-800',
-
-        // Elevated - with shadow
-        elevated:
-          'bg-white border-slate-200 shadow-md dark:bg-slate-950 dark:border-slate-800',
-
-        // Alert - left border accent
-        alert:
-          'bg-white border-slate-200 border-l-4 border-l-blue-500 shadow-sm dark:bg-slate-950 dark:border-slate-800 dark:border-l-blue-400',
-
-        // Success variant
-        success:
-          'bg-emerald-50 border-emerald-200 shadow-sm dark:bg-emerald-950/20 dark:border-emerald-900',
-
-        // Warning variant
-        warning:
-          'bg-amber-50 border-amber-200 shadow-sm dark:bg-amber-950/20 dark:border-amber-900',
+        default: 'bg-card border-border shadow-sm',
+        elevated: 'bg-card border-border shadow-md',
+        alert: 'bg-card border-border border-l-4 border-l-warning shadow-sm',
       },
       interactive: {
-        true: 'cursor-pointer hover:shadow-lg',
+        true: 'cursor-pointer hover:shadow-lg hover:border-primary/50',
         false: '',
       },
     },
@@ -75,82 +40,52 @@ const AppCard = React.forwardRef<HTMLDivElement, AppCardProps>(
 )
 AppCard.displayName = 'AppCard'
 
-interface AppCardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-const AppCardHeader = React.forwardRef<HTMLDivElement, AppCardHeaderProps>(
+const AppCardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex flex-col space-y-1.5 border-b border-slate-200 p-4 dark:border-slate-800', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-5', className)} {...props} />
   )
 )
 AppCardHeader.displayName = 'AppCardHeader'
 
-interface AppCardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
-
-const AppCardTitle = React.forwardRef<HTMLParagraphElement, AppCardTitleProps>(
+const AppCardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h2
       ref={ref}
-      className={cn(
-        'text-lg font-semibold leading-none tracking-tight text-slate-900 dark:text-slate-100',
-        className
-      )}
+      className={cn('text-lg font-semibold leading-none tracking-tight text-foreground', className)}
       {...props}
     />
   )
 )
 AppCardTitle.displayName = 'AppCardTitle'
 
-interface AppCardDescriptionProps
-  extends React.HTMLAttributes<HTMLParagraphElement> {}
-
-const AppCardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  AppCardDescriptionProps
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-slate-600 dark:text-slate-400', className)}
-    {...props}
-  />
-))
+const AppCardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+  )
+)
 AppCardDescription.displayName = 'AppCardDescription'
 
-interface AppCardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-const AppCardContent = React.forwardRef<HTMLDivElement, AppCardContentProps>(
+const AppCardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('p-4', className)} {...props} />
+    <div ref={ref} className={cn('p-5 pt-0', className)} {...props} />
   )
 )
 AppCardContent.displayName = 'AppCardContent'
 
-interface AppCardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-const AppCardFooter = React.forwardRef<HTMLDivElement, AppCardFooterProps>(
+const AppCardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'flex items-center justify-between border-t border-slate-200 p-4 dark:border-slate-800',
-        className
-      )}
-      {...props}
-    />
+    <div ref={ref} className={cn('flex items-center p-5 pt-0', className)} {...props} />
   )
 )
 AppCardFooter.displayName = 'AppCardFooter'
 
-export {
-  AppCard,
-  AppCardHeader,
-  AppCardTitle,
+export { 
+  AppCard, 
+  AppCardHeader, 
+  AppCardTitle, 
   AppCardDescription,
-  AppCardContent,
+  AppCardContent, 
   AppCardFooter,
-  appCardVariants,
+  appCardVariants 
 }
 export type { AppCardProps }

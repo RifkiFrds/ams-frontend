@@ -10,7 +10,7 @@
  * if (canApproveWorkflow()) { ... }
  */
 
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/modules/store';
 
 /**
  * Get current user from auth store
