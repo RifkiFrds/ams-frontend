@@ -5,63 +5,146 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { 
-  LayoutDashboard, 
-  Box, 
-  Tags, 
-  MapPin, 
-  ShoppingCart, 
-  ClipboardList, 
-  Repeat, 
-  ArrowLeftRight, 
-  Wrench, 
-  Trash2, 
-  Users, 
-  FileBarChart,
+  LayoutDashboard,
+  Database,
+  MapPin,
+  Building2,
+  UsersRound,
+  ShoppingCart,
+  ClipboardCheck,
+  ArrowRightLeft,
+  Handshake,
+  Wrench,
+  ClipboardList,
+  Trash2,
+  TriangleAlert,
+  FileText,
+  ShieldCheck,
+  CheckSquare,
   LogOut,
+  Settings
 } from 'lucide-react'
 import { useAuthStore } from '@/modules/auth/store/auth.store'
 
 const NAV_GROUPS = [
   {
-    label: 'OVERVIEW',
+    label: '',
     items: [
-      { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      {
+        label: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutDashboard,
+      },
     ],
   },
+
   {
     label: 'MASTER DATA',
     items: [
-      { label: 'All Assets', href: '/dashboard/assets', icon: Box },
-      { label: 'Categories', href: '/dashboard/categories', icon: Tags },
-      { label: 'Locations', href: '/dashboard/locations', icon: MapPin },
+      {
+        label: 'Manajemen Aset',
+        href: '/dashboard/assets',
+        icon: Database,
+      },
+      {
+        label: 'Lokasi',
+        href: '/dashboard/locations',
+        icon: MapPin,
+      },
+      {
+        label: 'Unit Kerja',
+        href: '/dashboard/unit-kerja',
+        icon: Building2,
+      },
+      {
+        label: 'User & Role',
+        href: '/dashboard/users',
+        icon: UsersRound,
+      },
     ],
   },
+
   {
     label: 'PROCUREMENT',
     items: [
-      { label: 'Purchase Requests', href: '/dashboard/requests', icon: ShoppingCart },
-      { label: 'Purchase Orders', href: '/dashboard/orders', icon: ClipboardList },
+      {
+        label: 'Pengadaan Aset',
+        href: '/dashboard/procurement',
+        icon: ShoppingCart,
+      },
     ],
   },
+
   {
     label: 'TRANSACTIONS',
     items: [
-      { label: 'Check-in/Out', href: '/dashboard/transactions', icon: Repeat },
-      { label: 'Transfers', href: '/dashboard/transfers', icon: ArrowLeftRight },
+      {
+        label: 'Assignment',
+        href: '/dashboard/assignment',
+        icon: ClipboardCheck,
+      },
+      {
+        label: 'Mutasi',
+        href: '/dashboard/mutasi',
+        icon: ArrowRightLeft,
+      },
+      {
+        label: 'Peminjaman',
+        href: '/dashboard/peminjaman',
+        icon: Handshake,
+      },
     ],
   },
+
   {
     label: 'MAINTENANCE & DISPOSAL',
     items: [
-      { label: 'Maintenance', href: '/dashboard/maintenance', icon: Wrench },
-      { label: 'Disposal', href: '/dashboard/disposal', icon: Trash2 },
+      {
+        label: 'Perawatan',
+        href: '/dashboard/perawatan',
+        icon: Wrench,
+      },
+      {
+        label: 'Inventarisasi',
+        href: '/dashboard/inventarisasi',
+        icon: ClipboardList,
+      },
+      {
+        label: 'Penghapusan',
+        href: '/dashboard/penghapusan',
+        icon: Trash2,
+      },
+      {
+        label: 'Laporan Kehilangan',
+        href: '/dashboard/laporan-kehilangan',
+        icon: TriangleAlert,
+      },
     ],
   },
+
   {
     label: 'SYSTEM & REPORTS',
     items: [
-      { label: 'User Management', href: '/dashboard/users', icon: Users },
-      { label: 'Reports', href: '/dashboard/reports', icon: FileBarChart },
+      {
+        label: 'Laporan',
+        href: '/dashboard/reports',
+        icon: FileText,
+      },
+      {
+        label: 'Audit Log',
+        href: '/dashboard/audit-log',
+        icon: ShieldCheck,
+      },
+      {
+        label: 'Approval Workflow',
+        href: '/dashboard/approval-workflow',
+        icon: CheckSquare,
+      },
+      {
+        label: 'Settings',
+        href: '/dashboard/settings',
+        icon: Settings,
+      }
     ],
   },
 ]
@@ -123,7 +206,7 @@ export function Sidebar() {
                   {user?.nama_lengkap || 'Admin Sistem'}
                 </p>
                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                  {user?.roles?.[0]?.nama_role || 'ADMIN SISTEM'}
+                  {user?.roles?.[0]?.nama_role || 'USER UMUM'}
                 </p>
               </div>
             </div>

@@ -76,7 +76,6 @@ export function AppModal({
                 onClick={onClose}
                 className="absolute right-4 top-4 rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-all outline-none"
               >
-                <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </button>
             )}
