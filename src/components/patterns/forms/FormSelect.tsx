@@ -18,9 +18,10 @@ interface FormSelectGroupOption {
   options: FormSelectOption[]
 }
 
-interface FormSelectProps extends Omit<React.ComponentPropsWithoutRef<"button">, "value"> {
+interface FormSelectProps extends Omit<React.ComponentPropsWithoutRef<"button">, "value" | "onChange"> {
   value?: string
   onValueChange?: (value: string) => void
+  onChange?: (value: string) => void
   options?: (FormSelectOption | FormSelectGroupOption)[]
   placeholder?: string
   error?: string
@@ -39,6 +40,7 @@ const FormSelect = React.forwardRef<
     {
       value,
       onValueChange,
+      onChange,
       options = [],
       placeholder = "Select an option",
       error,
@@ -48,11 +50,16 @@ const FormSelect = React.forwardRef<
     },
     ref
   ) => {
+    const handleChange = (value: string) => {
+      onValueChange?.(value);
+      onChange?.(value);
+    };
+
     return (
       <AppSelect
         ref={ref}
         value={value}
-        onValueChange={onValueChange}
+        onChange={handleChange}
         options={options}
         placeholder={placeholder}
         error={error}

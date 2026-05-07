@@ -22,9 +22,13 @@ import {
   ShieldCheck,
   CheckSquare,
   LogOut,
-  Settings
+  Settings,
+  X
 } from 'lucide-react'
 import { useAuthStore } from '@/modules/auth/store/auth.store'
+import { useLayoutStore } from '@/lib/store/layout.store'
+import { useAppLogout } from '@/modules/auth/hooks/useAppLogout'
+import { Loader2 } from 'lucide-react'
 
 const NAV_GROUPS = [
   {
@@ -37,7 +41,6 @@ const NAV_GROUPS = [
       },
     ],
   },
-
   {
     label: 'MASTER DATA',
     items: [
@@ -63,7 +66,6 @@ const NAV_GROUPS = [
       },
     ],
   },
-
   {
     label: 'PROCUREMENT',
     items: [
@@ -74,7 +76,6 @@ const NAV_GROUPS = [
       },
     ],
   },
-
   {
     label: 'TRANSACTIONS',
     items: [
@@ -95,7 +96,6 @@ const NAV_GROUPS = [
       },
     ],
   },
-
   {
     label: 'MAINTENANCE & DISPOSAL',
     items: [
@@ -121,7 +121,6 @@ const NAV_GROUPS = [
       },
     ],
   },
-
   {
     label: 'SYSTEM & REPORTS',
     items: [
@@ -149,35 +148,42 @@ const NAV_GROUPS = [
   },
 ]
 
-import { useAppLogout } from '@/modules/auth/hooks/useAppLogout'
-import { Loader2 } from 'lucide-react'
-
 export function Sidebar() {
   const pathname = usePathname()
   const { user } = useAuthStore()
   const { handleLogout, isLoggingOut } = useAppLogout()
-  
-  // State untuk Open/Close Sidebar
-  const [isOpen, setIsOpen] = React.useState(true)
+  const { isSidebarOpen, setSidebarOpen } = useLayoutStore()
+
+  // Close sidebar on route change (mobile only)
+  React.useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false)
+    }
+  }, [pathname, setSidebarOpen])
 
   return (
     <>
+      {/* Mobile Overlay */}
+      <div 
+        className={cn(
+          "fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300",
+          isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* Sidebar Container */}
       <aside 
         className={cn(
-          "fixed left-0 top-0 h-screen flex flex-col z-40 transition-all duration-300 ease-in-out",
-          "bg-card text-card-foreground border-none", 
-          // Shadow halus untuk memisahkan sidebar dari konten di Light Mode (hilang di Dark Mode)
-          "shadow-xl shadow-black/5 dark:shadow-none",
-          // Logika buka tutup
-          isOpen ? "w-72 translate-x-0" : "w-0 -translate-x-full overflow-hidden"
+          "fixed left-0 top-0 h-screen flex flex-col z-50 transition-all duration-300 ease-in-out bg-card border-r border-border",
+          isSidebarOpen 
+            ? "w-72 translate-x-0" 
+            : "w-72 -translate-x-full lg:w-0 lg:opacity-0 lg:pointer-events-none overflow-hidden"
         )}
       >
-        {/* ... (rest of brand/user area) ... */}
-        <div className="w-72 flex flex-col h-full">
-          {/* ... */}
+        <div className="flex flex-col h-full w-72">
           {/* Brand Area */}
-          <div className="p-6 relative">
+          <div className="p-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl">
                 A
@@ -186,18 +192,26 @@ export function Sidebar() {
                 <h1 className="text-sm font-bold text-foreground leading-tight">
                   BPSDM PERTAHANAN
                 </h1>
-                <p className="text-[10px] font-medium text-muted-foreground tracking-widest">
-                  ASET MANAGEMENT
+                <p className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase">
+                  Aset Management
                 </p>
               </div>
             </div>
+            
+            {/* Close button for mobile */}
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
           {/* User Card Area */}
           <div className="px-4 mb-6">
-            <div className="p-3 rounded-xl border border-border bg-transparent flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
-                <span className="text-xs font-bold text-muted-foreground">
+            <div className="p-3 rounded-2xl border border-border bg-muted/30 flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+                <span className="text-xs font-bold text-primary">
                   {user?.nama_lengkap?.substring(0, 2).toUpperCase() || 'AD'}
                 </span>
               </div>
@@ -212,14 +226,16 @@ export function Sidebar() {
             </div>
           </div>
 
-          {/* Navigasi Grouping dengan Scrollbar Halus */}
-          <nav className="flex-1 overflow-y-auto px-4 pb-6 scrollbar-smooth">
+          {/* Navigation Area */}
+          <nav className="flex-1 overflow-y-auto px-4 pb-6 custom-scrollbar">
             <div className="space-y-6">
               {NAV_GROUPS.map((group) => (
                 <div key={group.label} className="space-y-2">
-                  <h3 className="px-3 text-[10px] font-bold text-muted-foreground tracking-[0.1em]">
-                    {group.label}
-                  </h3>
+                  {group.label && (
+                    <h3 className="px-3 text-[10px] font-bold text-muted-foreground tracking-[0.2em] uppercase">
+                      {group.label}
+                    </h3>
+                  )}
                   <div className="space-y-1">
                     {group.items.map((item) => {
                       const isActive = pathname === item.href
@@ -230,17 +246,17 @@ export function Sidebar() {
                           key={item.href}
                           href={item.href}
                           className={cn(
-                            'flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all duration-200 group',
+                            'flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all duration-200 rounded-xl group',
                             isActive 
-                              ? 'bg-primary text-primary-foreground rounded-full shadow-lg shadow-primary/20' 
-                              : 'text-muted-foreground hover:text-foreground hover:bg-muted rounded-full'
+                              ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' 
+                              : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                           )}
                         >
                           <Icon className={cn(
-                            'h-4 w-4',
+                            'h-4 w-4 shrink-0',
                             isActive ? 'text-primary-foreground' : 'group-hover:text-foreground'
                           )} />
-                          {item.label}
+                          <span className="truncate">{item.label}</span>
                         </Link>
                       )
                     })}
@@ -256,7 +272,7 @@ export function Sidebar() {
               onClick={() => handleLogout()}
               disabled={isLoggingOut}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 w-full text-sm font-medium text-destructive transition-colors rounded-full hover:bg-destructive/10",
+                "flex items-center gap-3 px-3 py-2.5 w-full text-sm font-medium text-destructive transition-colors rounded-xl hover:bg-destructive/10",
                 isLoggingOut && "opacity-50 cursor-not-allowed"
               )}
             >
@@ -265,11 +281,9 @@ export function Sidebar() {
               ) : (
                 <LogOut className="h-4 w-4" />
               )}
-              {isLoggingOut ? 'Logging out...' : 'Logout System'}
+              <span>{isLoggingOut ? 'Logging out...' : 'Logout System'}</span>
             </button>
           </div>
-
-
         </div>
       </aside>
     </>

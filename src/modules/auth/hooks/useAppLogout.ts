@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useApolloClient } from '@apollo/client'
 // Pastikan path import di bawah ini sesuai dengan lokasi file useAuth kamu
 import { useAuth } from './useAuth' 
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 /**
  * useAppLogout
@@ -32,18 +32,14 @@ export function useAppLogout() {
       clearAuthState()
 
       // 3. Notifikasi Berhasil
-      toast.success('Berhasil Keluar', {
-        description: 'Sesi Anda telah diakhiri dengan aman.'
-      })
+      toast.success('Berhasil Keluar', 'Sesi Anda telah diakhiri dengan aman.')
 
       // 4. Redirect ke Halaman Login menggunakan replace (hapus history)
       router.replace('/login')
       
     } catch (error) {
       console.error('Logout error:', error)
-      toast.error('Gagal memproses logout', {
-        description: 'Terjadi kesalahan sistem saat mencoba keluar.'
-      })
+      toast.error('Gagal memproses logout', 'Terjadi kesalahan sistem saat mencoba keluar.')
       
       // Matikan loading hanya jika gagal
       setIsLoggingOut(false)

@@ -3,8 +3,7 @@ import { useRouter } from 'next/navigation';
 import { LOGIN_MUTATION } from '../services/auth.mutation';
 import { useAuthStore } from '../store/auth.store';
 import { AuthResponse } from '../types/auth.types';
-import { toast } from 'sonner';
-import { getGraphQLErrorMessage } from '@/lib/core/apollo';
+import { toast } from '@/lib/toast';
 
 export const useLogin = () => {
   const router = useRouter();
@@ -14,16 +13,12 @@ export const useLogin = () => {
     onCompleted: (data) => {
       if (data.login) {
         loginToStore(data.login.token, data.login.user);
-        toast.success('Login Berhasil', {
-          description: `Selamat datang kembali, ${data.login.user.nama_lengkap}!`,
-        });
+        toast.success('Login Berhasil', `Selamat datang kembali, ${data.login.user.nama_lengkap}!`);
         router.push('/dashboard');
       }
     },
     onError: (error) => {
-      toast.error('Login Gagal', {
-        description: getGraphQLErrorMessage(error),
-      });
+      toast.graphqlError(error, 'Login Gagal');
     }
   });
 

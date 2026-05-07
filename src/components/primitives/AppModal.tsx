@@ -20,23 +20,22 @@ interface AppModalProps {
   description?: string
   children: React.ReactNode
   className?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'full'
   showCloseButton?: boolean
 }
 
 const sizeClasses = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-xl',
-  '2xl': 'max-w-2xl',
-  full: 'max-w-[95vw]',
+  sm: 'sm:max-w-sm',
+  md: 'sm:max-w-md',
+  lg: 'sm:max-w-lg',
+  xl: 'sm:max-w-xl',
+  '2xl': 'sm:max-w-2xl',
+  '3xl': 'sm:max-w-3xl',
+  '4xl': 'sm:max-w-4xl',
+  '5xl': 'sm:max-w-5xl',
+  full: 'sm:max-w-[95%]',
 }
 
-/**
- * AppModal Primitive
- * Base dialog component with project's design system tokens.
- */
 export function AppModal({
   isOpen,
   onClose,
@@ -53,37 +52,46 @@ export function AppModal({
         <DialogOverlay className="bg-background/80 backdrop-blur-sm animate-in fade-in duration-200 fixed inset-0 z-50" />
         <DialogContent 
           className={cn(
-            "fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%]",
-            "bg-card border border-border shadow-2xl rounded-xl p-0 overflow-hidden outline-none",
+            "fixed left-[50%] top-[50%] z-50 w-[95vw] sm:w-[unset] translate-x-[-50%] translate-y-[-50%]",
+            "bg-card border border-border shadow-2xl rounded-2xl p-0 outline-none",
             "animate-in fade-in zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-48 duration-200",
-            sizeClasses[size],
+            "flex flex-col max-h-[90vh]", 
+            size !== 'full' && sizeClasses[size],
+            size === 'full' && 'sm:max-w-[95vw]',
             className
           )}
         >
           {/* Header */}
-          <DialogHeader className="p-6 pb-2 relative">
-            <DialogTitle className="text-lg font-bold text-foreground pr-8">
-              {title}
-            </DialogTitle>
-            {description && (
-              <DialogDescription className="text-sm text-muted-foreground mt-1">
-                {description}
-              </DialogDescription>
-            )}
-            
-            {showCloseButton && (
-              <button
-                onClick={onClose}
-                className="absolute right-4 top-4 rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-all outline-none"
-              >
-                <span className="sr-only">Close</span>
-              </button>
-            )}
+          <DialogHeader className="p-6 pb-4 relative border-b border-border shrink-0">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <DialogTitle className="text-xl font-bold text-foreground tracking-tight">
+                  {title}
+                </DialogTitle>
+                {description && (
+                  <DialogDescription className="text-sm text-muted-foreground">
+                    {description}
+                  </DialogDescription>
+                )}
+              </div>
+              
+              {showCloseButton && (
+                <button
+                  onClick={onClose}
+                  className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-all outline-none border border-transparent hover:border-border"
+                >
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </button>
+              )}
+            </div>
           </DialogHeader>
           
-          {/* Content */}
-          <div className="p-6 pt-2">
-            {children}
+          {/* Content Area with Auto-Scroll */}
+          <div className="p-6 pt-4 overflow-y-auto flex-1 custom-scrollbar scroll-smooth">
+            <div className="min-h-0">
+              {children}
+            </div>
           </div>
         </DialogContent>
       </DialogPortal>

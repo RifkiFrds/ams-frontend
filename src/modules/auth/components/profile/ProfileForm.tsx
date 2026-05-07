@@ -82,7 +82,7 @@ export function ProfileForm({ initialData, isLoading, onSave }: ProfileFormProps
         className="p-6 space-y-6"
         isLoading={isLoading}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="nrp"

@@ -28,6 +28,9 @@ export type { AppSelectProps, SelectOption, SelectGroupOption } from './AppSelec
 export { AppTextarea } from './AppTextarea'
 export type { AppTextareaProps } from './AppTextarea'
 
+export { AppCheckbox } from './AppCheckbox'
+export type { AppCheckboxProps } from './AppCheckbox'
+
 // Container Primitives
 export {
   AppCard,
@@ -45,4 +48,5 @@ export type { AppBadgeProps } from './AppBadge'
 
 // Overlay Primitives
 export { AppModal } from './AppModal'
+export * from './AppDropdown'
 

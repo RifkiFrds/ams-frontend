@@ -4,14 +4,14 @@ import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from '@/lib/core/apollo';
 import React from 'react';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
-import { AppToaster } from '@/components/providers/AppToaster';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
       <ApolloProvider client={apolloClient}>
         {children}
-        <AppToaster />
+        <Toaster />
       </ApolloProvider>
     </ThemeProvider>
   );

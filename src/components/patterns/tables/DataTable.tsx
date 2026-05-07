@@ -85,7 +85,7 @@ function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-border overflow-hidden bg-card">
+      <div className="rounded-xl border border-border overflow-x-auto bg-card">
         <table className="w-full">
           <thead className="bg-muted/50 border-b border-border">
             {table.getHeaderGroups().map((headerGroup) => (

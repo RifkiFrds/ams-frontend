@@ -8,19 +8,25 @@ export interface SelectOption { value: string; label: string; disabled?: boolean
 export interface SelectGroupOption { label: string; options: SelectOption[] }
 
 export interface AppSelectProps {
-  value?: string; 
+  value?: string;
   onValueChange?: (value: string) => void;
-  options?: (SelectOption | SelectGroupOption)[]; 
-  placeholder?: string; 
-  error?: string; 
+  onChange?: (value: string) => void;
+  options?: (SelectOption | SelectGroupOption)[];
+  placeholder?: string;
+  error?: string;
   disabled?: boolean;
 }
 
 const AppSelect = React.forwardRef<HTMLButtonElement, AppSelectProps>(
-  ({ value, onValueChange, options = [], placeholder = 'Select category', error, disabled }, ref) => {
+  ({ value, onValueChange, onChange, options = [], placeholder = 'Select category', error, disabled }, ref) => {
+    const handleValueChange = (newValue: string) => {
+      onValueChange?.(newValue)
+      onChange?.(newValue)
+    }
+
     return (
       <div>
-        <UISelect value={value} onValueChange={onValueChange} disabled={disabled}>
+        <UISelect value={value} onValueChange={handleValueChange} disabled={disabled}>
           <SelectTrigger
             ref={ref}
             className={cn(

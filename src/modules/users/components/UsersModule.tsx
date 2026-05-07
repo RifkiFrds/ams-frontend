@@ -18,8 +18,8 @@ import {
   DELETE_USER_MUTATION, 
   ACTIVATE_USER_MUTATION, 
   DEACTIVATE_USER_MUTATION 
-} from '../services/user.graphql'
-import { toast } from 'sonner'
+} from '@/modules/users/services/user.graphql'
+import { toast } from '@/lib/toast'
 import { getGraphQLErrorMessage } from '@/lib/core/apollo'
 
 import { UserFormModal } from './modals/UserFormModal'
@@ -79,9 +79,7 @@ export function UsersModule() {
       refetch()
     },
     onError: (error) => {
-      toast.error('Gagal menghapus pengguna', {
-        description: getGraphQLErrorMessage(error)
-      })
+      toast.error('Gagal menghapus pengguna', getGraphQLErrorMessage(error))
     }
   })
 
@@ -92,9 +90,7 @@ export function UsersModule() {
       refetch()
     },
     onError: (error) => {
-      toast.error('Gagal mengaktifkan pengguna', {
-        description: getGraphQLErrorMessage(error)
-      })
+      toast.error('Gagal mengaktifkan pengguna', getGraphQLErrorMessage(error))
     }
   })
 
@@ -105,9 +101,7 @@ export function UsersModule() {
       refetch()
     },
     onError: (error) => {
-      toast.error('Gagal menonaktifkan pengguna', {
-        description: getGraphQLErrorMessage(error)
-      })
+      toast.error('Gagal menonaktifkan pengguna', getGraphQLErrorMessage(error))
     }
   })
 

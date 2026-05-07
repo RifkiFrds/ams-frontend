@@ -3,8 +3,7 @@ import { useRouter } from 'next/navigation';
 import { REGISTER_MUTATION } from '../services/auth.mutation';
 import { useAuthStore } from '../store/auth.store';
 import { RegisterResponse } from '../types/auth.types';
-import { toast } from 'sonner';
-import { getGraphQLErrorMessage } from '@/lib/core/apollo';
+import { toast } from '@/lib/toast';
 
 export const useRegister = () => {
   const router = useRouter();
@@ -13,17 +12,13 @@ export const useRegister = () => {
   const [registerMutation, { loading, error }] = useMutation<RegisterResponse>(REGISTER_MUTATION, {
     onCompleted: (data) => {
       if (data.register) {
-        toast.success('Registrasi Berhasil', {
-          description: 'Akun Anda telah berhasil dibuat. Selamat datang!',
-        });
+        toast.success('Registrasi Berhasil', 'Akun Anda telah berhasil dibuat. Selamat datang!');
         loginToStore(data.register.token, data.register.user as any);
         router.push('/dashboard');
       }
     },
     onError: (error) => {
-      toast.error('Registrasi Gagal', {
-        description: getGraphQLErrorMessage(error),
-      });
+      toast.graphqlError(error, 'Registrasi Gagal');
     }
   });
 

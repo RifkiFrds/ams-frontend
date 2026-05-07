@@ -1,24 +1,23 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { 
-  AppButton, 
-  AppInput, 
-  AppSelect, 
-  AppModal 
+import {
+  AppButton,
+  AppInput,
+  AppSelect,
+  AppModal
 } from '@/components/primitives'
 import { useQuery, useMutation } from '@apollo/client'
-import { 
-  GET_ROLES_QUERY, 
-  GET_UNITS_QUERY, 
-  CREATE_USER_MUTATION, 
-  UPDATE_USER_MUTATION 
-} from '@/modules/auth/services/user.graphql'
-import { toast } from 'sonner'
-import { getGraphQLErrorMessage } from '@/lib/core/apollo'
+import {
+  GET_ROLES_QUERY,
+  CREATE_USER_MUTATION,
+  UPDATE_USER_MUTATION
+} from '@/modules/users/services/user.graphql'
+import { useUnitKerjaOptions } from '@/modules/unit-kerja/hooks/useUnitKerjaList'
+import { toast } from '@/lib/toast'
 
 const userSchema = z.object({
   nama_lengkap: z.string().min(3, 'Nama minimal 3 karakter'),
@@ -32,10 +31,21 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>
 
+interface InitialUserData {
+  id?: string
+  nama_lengkap?: string
+  nrp?: string
+  email?: string
+  jabatan?: string
+  unit_id?: string
+  unit?: { id?: string }
+  roles?: Array<{ id: string }>
+}
+
 interface UserFormModalProps {
   isOpen: boolean
   onClose: () => void
-  initialData?: any // if present, mode is Edit
+  initialData?: InitialUserData
   onSuccess: () => void
 }
 
@@ -52,14 +62,14 @@ export function UserFormModal({
   const isEdit = !!initialData
 
   const { data: rolesData } = useQuery(GET_ROLES_QUERY)
-  const { data: unitsData } = useQuery(GET_UNITS_QUERY)
+  const { options: unitOptions, loading: unitsLoading } = useUnitKerjaOptions()
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
-    watch,
+    control,
     formState: { errors, isSubmitting }
   } = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
@@ -105,19 +115,23 @@ export function UserFormModal({
   const onSubmit = async (values: UserFormValues) => {
     try {
       const { role_id, password, ...rest } = values
-      const input: any = {
+      const input: Record<string, unknown> = {
         ...rest,
         role_ids: [role_id]
       }
 
       if (isEdit) {
-        if (password) input.password = password
+        if (password) {
+          input.password = password
+        }
         await updateUser({
-          variables: { id: initialData.id, input }
+          variables: { id: initialData?.id, input }
         })
         toast.success('Data pengguna berhasil diperbarui')
       } else {
-        if (password) input.password = password
+        if (password) {
+          input.password = password
+        }
         await createUser({
           variables: { input }
         })
@@ -125,21 +139,17 @@ export function UserFormModal({
       }
       onSuccess()
       onClose()
-    } catch (error: any) {
-      toast.error(isEdit ? 'Gagal memperbarui pengguna' : 'Gagal menambahkan pengguna', {
-        description: getGraphQLErrorMessage(error)
-      })
+    } catch (error: unknown) {
+      toast.graphqlError(error, isEdit ? 'Gagal memperbarui pengguna' : 'Gagal menambahkan pengguna')
     }
   }
 
-  const roleOptions = rolesData?.roles?.map((r: any) => ({
+  const selectedUnitId = useWatch({ control, name: 'unit_id' })
+  const selectedRoleId = useWatch({ control, name: 'role_id' })
+
+  const roleOptions = rolesData?.roles?.map((r: { id: string; nama_role: string }) => ({
     value: r.id,
     label: r.nama_role
-  })) || []
-
-  const unitOptions = unitsData?.units?.map((u: any) => ({
-    value: u.id,
-    label: u.nama_unit
   })) || []
 
   return (
@@ -148,15 +158,15 @@ export function UserFormModal({
       onClose={onClose}
       title={isEdit ? 'Edit Pengguna' : 'Tambah Pengguna Baru'}
       description={isEdit ? `Memperbarui data akun ${initialData.nama_lengkap}` : 'Daftarkan personel baru ke dalam sistem.'}
-      size="lg"
+      size="xl"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               Nama Lengkap
             </label>
-            <AppInput 
+            <AppInput
               {...register('nama_lengkap')}
               placeholder="Contoh: John Doe"
               error={errors.nama_lengkap?.message}
@@ -167,7 +177,7 @@ export function UserFormModal({
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               NRP
             </label>
-            <AppInput 
+            <AppInput
               {...register('nrp')}
               placeholder="Masukkan NRP"
               error={errors.nrp?.message}
@@ -178,7 +188,7 @@ export function UserFormModal({
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               Email
             </label>
-            <AppInput 
+            <AppInput
               {...register('email')}
               placeholder="email@example.com"
               type="email"
@@ -190,7 +200,7 @@ export function UserFormModal({
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               Jabatan
             </label>
-            <AppInput 
+            <AppInput
               {...register('jabatan')}
               placeholder="Contoh: Staff IT"
               error={errors.jabatan?.message}
@@ -201,12 +211,13 @@ export function UserFormModal({
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               Unit Kerja
             </label>
-            <AppSelect 
-              value={watch('unit_id')}
+            <AppSelect
+              value={selectedUnitId}
               onValueChange={(val) => setValue('unit_id', val)}
               placeholder="Pilih Unit"
               options={unitOptions}
               error={errors.unit_id?.message}
+              disabled={unitsLoading}
             />
           </div>
 
@@ -214,8 +225,8 @@ export function UserFormModal({
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               Role Akses
             </label>
-            <AppSelect 
-              value={watch('role_id')}
+            <AppSelect
+              value={selectedRoleId}
               onValueChange={(val) => setValue('role_id', val)}
               placeholder="Pilih Role"
               options={roleOptions}
@@ -223,11 +234,11 @@ export function UserFormModal({
             />
           </div>
 
-          <div className="md:col-span-2 space-y-1.5">
+          <div className="lg:col-span-2 space-y-1.5">
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
               Password {isEdit && '(Kosongkan jika tidak ingin ganti)'}
             </label>
-            <AppInput 
+            <AppInput
               {...register('password')}
               placeholder={isEdit ? '••••••••' : 'Masukkan password'}
               type="password"
@@ -237,17 +248,17 @@ export function UserFormModal({
         </div>
 
         <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-border">
-          <AppButton 
-            type="button" 
-            variant="outline" 
+          <AppButton
+            type="button"
+            variant="outline"
             onClick={onClose}
             disabled={isSubmitting}
           >
             Batal
           </AppButton>
-          <AppButton 
-            type="submit" 
-            variant="primary" 
+          <AppButton
+            type="submit"
+            variant="primary"
             loading={isSubmitting}
           >
             {isEdit ? 'Simpan Perubahan' : 'Simpan Pengguna'}
