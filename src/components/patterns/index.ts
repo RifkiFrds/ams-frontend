@@ -14,3 +14,6 @@ export * from './tables'
 
 // Workflow
 export * from './workflow'
+
+// Layout
+export * from './layout'

@@ -5,20 +5,16 @@ import { PageShell } from '@/components/patterns'
 import { AppCard, AppCardContent } from '@/components/primitives'
 import { AlertCircle } from 'lucide-react'
 
-/**
- * Dashboard Root Page
- * Memberikan ringkasan eksekutif dan status sistem.
- */
-export default function DashboardPage() {
+export default function AssignmentPage() {
   return (
     <PageShell 
-      title="Dashboard Utama" 
-      description="Ringkasan data aset dan sistem secara real-time."
+      title="Penugasan" 
+      description="Kelola penugasan aset ke personil atau unit tertentu."
     >
       <AppCard variant="alert">
         <AppCardContent className="flex items-center gap-3 pt-5">
           <AlertCircle className="h-5 w-5 text-warning" />
-          <p className="text-sm font-medium">Dashboard summary components are under development</p>
+          <p className="text-sm font-medium">Module under development</p>
         </AppCardContent>
       </AppCard>
     </PageShell>
