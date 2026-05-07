@@ -11,7 +11,7 @@ import {
   AppInput, 
   AppSelect 
 } from '@/components/primitives'
-import { UsersTable } from '@/components/users/UsersTable'
+import { UsersTable } from '@/modules/users/UsersTable'
 import { useQuery, useMutation } from '@apollo/client'
 import { 
   GET_USERS_QUERY, 
@@ -22,8 +22,8 @@ import {
 import { toast } from 'sonner'
 import { getGraphQLErrorMessage } from '@/lib/core/apollo'
 
-import { UserFormModal } from '@/components/users/modals/UserFormModal'
-import { ConfirmActionModal } from '@/components/users/modals/ConfirmActionModal'
+import { UserFormModal } from '@/modules/users/modals/UserFormModal'
+import { ConfirmActionModal } from '@/modules/users/modals/ConfirmActionModal'
 
 /**
  * UserManagementPage
